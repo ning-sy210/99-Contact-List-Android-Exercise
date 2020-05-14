@@ -93,7 +93,10 @@ class ContactAdapter(items: ArrayList<Contact>, ctx: Context) : RecyclerView.Ada
             var filteredList = ArrayList<Contact>()
 
             if (constraint == null || constraint.isEmpty()) {
-                contactListFull[previousExpandedContactPos!!].isExpanded = false
+                if (previousExpandedContactPos != null) {
+                    contactListFull[previousExpandedContactPos!!].isExpanded = false
+                    previousExpandedContactPos = null
+                }
                 filteredList.addAll(contactListFull)
             } else {
                 if (previousExpandedContactPos != null) {
