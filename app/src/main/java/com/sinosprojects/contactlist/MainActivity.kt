@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     fun readContactList(rv: RecyclerView) {
         val contactList : MutableList<ContactDTO> = ArrayList()
-        val contacts = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
+        val contacts = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.Data.DISPLAY_NAME + " ASC")
 
         if (contacts != null) {
             while (contacts.moveToNext()) {
