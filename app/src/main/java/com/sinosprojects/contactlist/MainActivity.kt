@@ -14,9 +14,11 @@ import android.provider.MediaStore
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.contact_card.*
 import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val contactList : RecyclerView = findViewById(R.id.contactList)
         contactList.layoutManager = LinearLayoutManager(this)
 
         if (!hasContactListAccessPermission()) {
@@ -35,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         readContactList(contactList)
     }
 
-    fun readContactList(rv: RecyclerView) {
+    private fun readContactList(rv: RecyclerView) {
         val contactList : MutableList<ContactDTO> = ArrayList()
         val contacts = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.Data.DISPLAY_NAME + " ASC")
 
