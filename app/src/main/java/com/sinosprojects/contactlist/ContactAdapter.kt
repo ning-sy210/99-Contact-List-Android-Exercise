@@ -76,7 +76,11 @@ class ContactAdapter(items: ArrayList<Contact>, ctx: Context) : RecyclerView.Ada
                 notifyItemChanged(previousExpandedContactPos!!)
             }
 
-            previousExpandedContactPos = adapterPosition
+            if (adapterPosition != previousExpandedContactPos) {
+                previousExpandedContactPos = adapterPosition
+            } else {
+                previousExpandedContactPos = null
+            }
         }
     }
 
@@ -89,14 +93,18 @@ class ContactAdapter(items: ArrayList<Contact>, ctx: Context) : RecyclerView.Ada
             var filteredList = ArrayList<Contact>()
 
             if (constraint == null || constraint.isEmpty()) {
+                contactListFull[previousExpandedContactPos!!].isExpanded = false
                 filteredList.addAll(contactListFull)
             } else {
+                if (previousExpandedContactPos != null) {
+                    contactListFull[previousExpandedContactPos!!].isExpanded = false
+                    previousExpandedContactPos = null
+                }
+
                 val filteredPattern = constraint.toString().toLowerCase().trim()
 
                 for(item in contactListFull) {
-                    if (item.name.toLowerCase().contains(filteredPattern)) {
-                        filteredList.add(item)
-                    } else if (item.number.contains(filteredPattern)) {
+                    if (item.name.toLowerCase().contains(filteredPattern) || item.number.contains(filteredPattern)) {
                         filteredList.add(item)
                     }
                 }
