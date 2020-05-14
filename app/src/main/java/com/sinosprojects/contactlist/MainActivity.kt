@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.MediaStore
+import android.view.Menu
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -23,12 +25,14 @@ import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() {
     private val REQUEST_READ_CONTACTS_CODE = 1
+    private lateinit var contactList : RecyclerView
+    private lateinit var contactListAdapter: ContactAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val contactList : RecyclerView = findViewById(R.id.contactList)
+        contactList = findViewById(R.id.contactList)
         contactList.layoutManager = LinearLayoutManager(this)
 
         if (!hasContactListAccessPermission()) {
@@ -59,7 +63,8 @@ class MainActivity : AppCompatActivity() {
                 contactList.add(obj)
             }
 
-            rv.adapter = ContactAdapter(contactList, this)
+            contactListAdapter = ContactAdapter(contactList as ArrayList<ContactDTO>, this)
+            rv.adapter = contactListAdapter
             contacts.close()
         }
     }
@@ -97,5 +102,27 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        var inflater = menuInflater
+        inflater.inflate(R.menu.main, menu)
+
+        var item = menu.findItem(R.id.action_search)
+        var searchView = item.actionView as androidx.appcompat.widget.SearchView
+
+        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                contactListAdapter.filter.filter(newText)
+                return false
+            }
+
+        })
+
+        return super.onCreateOptionsMenu(menu)
     }
 }
