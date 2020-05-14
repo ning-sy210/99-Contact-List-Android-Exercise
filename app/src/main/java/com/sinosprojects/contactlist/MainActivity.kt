@@ -1,15 +1,20 @@
 package com.sinosprojects.contactlist
 
 import android.app.AlertDialog
+import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.database.Cursor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() {
@@ -19,16 +24,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val contactList = findViewById<RecyclerView>(R.id.contactList)
+        contactList.layoutManager = LinearLayoutManager(this)
 
         if (!hasContactListAccessPermission()) {
             requestContactListAccessPermission()
         }
-        readContactList()
+
+        readContactList(contactList)
     }
 
-    fun readContactList() {
+    fun readContactList(rv: RecyclerView) {
+        val contactList : MutableList<ContactDTO> = ArrayList()
+        val contacts = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
 
+        if (contacts != null) {
+            while (contacts.moveToNext()) {
+                val name = contacts.getString(contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                val number = contacts.getString(contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                val obj = ContactDTO()
+                obj.name = name
+                obj.number = number
+
+                contactList.add(obj)
+            }
+
+            rv.adapter = ContactAdapter(contactList, this)
+            contacts.close()
+        }
     }
 
     private fun hasContactListAccessPermission() : Boolean {
