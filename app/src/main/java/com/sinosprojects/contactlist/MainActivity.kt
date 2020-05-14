@@ -6,9 +6,11 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -44,6 +46,12 @@ class MainActivity : AppCompatActivity() {
                 val obj = ContactDTO()
                 obj.name = name
                 obj.number = number
+
+                val photo_uri = contacts.getString(contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
+
+                if (photo_uri != null) {
+                    obj.image = MediaStore.Images.Media.getBitmap(contentResolver, Uri.parse(photo_uri))
+                }
 
                 contactList.add(obj)
             }
