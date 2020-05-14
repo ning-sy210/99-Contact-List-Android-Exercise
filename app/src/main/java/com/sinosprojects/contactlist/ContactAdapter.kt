@@ -72,7 +72,7 @@ class ContactAdapter(items: ArrayList<ContactDTO>, ctx: Context) : RecyclerView.
             contact.isExpanded = !contact.isExpanded
             notifyItemChanged(adapterPosition)
 
-            if (previousExpandedContactPos != null) {
+            if (previousExpandedContactPos != null && previousExpandedContactPos != adapterPosition) {
                 val prevContact = contactList[previousExpandedContactPos!!]
                 prevContact.isExpanded = false
                 notifyItemChanged(previousExpandedContactPos!!)
