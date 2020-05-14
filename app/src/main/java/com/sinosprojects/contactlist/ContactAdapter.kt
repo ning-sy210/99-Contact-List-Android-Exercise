@@ -10,12 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.contact_card.view.*
 
-class ContactAdapter(items: ArrayList<ContactDTO>, ctx: Context) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>(), Filterable {
+class ContactAdapter(items: ArrayList<Contact>, ctx: Context) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>(), Filterable {
     private var contactList = items
     private var contactListFull = ArrayList(items)
     private var context = ctx
@@ -55,9 +53,9 @@ class ContactAdapter(items: ArrayList<ContactDTO>, ctx: Context) : RecyclerView.
         var profileImage : ImageView
 
         var additionalInfo : ConstraintLayout
-        var contactList : List<ContactDTO>
+        var contactList : List<Contact>
 
-        constructor(view: View, contacts: List<ContactDTO>) : super(view) {
+        constructor(view: View, contacts: List<Contact>) : super(view) {
             name = view.contact_name!!
             mobile = view.contact_mobile!!
             profileImage = view.contact_image!!
@@ -88,7 +86,7 @@ class ContactAdapter(items: ArrayList<ContactDTO>, ctx: Context) : RecyclerView.
 
     private val filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): FilterResults {
-            var filteredList = ArrayList<ContactDTO>()
+            var filteredList = ArrayList<Contact>()
 
             if (constraint == null || constraint.isEmpty()) {
                 filteredList.addAll(contactListFull)
@@ -113,7 +111,7 @@ class ContactAdapter(items: ArrayList<ContactDTO>, ctx: Context) : RecyclerView.
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             contactList.clear()
             if (results != null) {
-                contactList.addAll(results.values as Collection<ContactDTO>)
+                contactList.addAll(results.values as Collection<Contact>)
             }
             notifyDataSetChanged()
         }

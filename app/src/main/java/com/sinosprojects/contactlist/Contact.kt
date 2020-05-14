@@ -1,8 +1,10 @@
 package com.sinosprojects.contactlist
 
-class Contact(p: String, n: String, phone: String) {
-    val photo = p
-    val name = n
-    val mobile = phone
+import android.graphics.Bitmap
+
+class Contact {
+    var name = ""
+    var number = ""
+    var image : Bitmap? = null
     var isExpanded = false
 }

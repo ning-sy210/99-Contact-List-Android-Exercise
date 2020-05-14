@@ -1,27 +1,19 @@
 package com.sinosprojects.contactlist
 
 import android.app.AlertDialog
-import android.content.ContentResolver
-import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.view.Menu
-import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.contact_card.*
-import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() {
     private val REQUEST_READ_CONTACTS_CODE = 1
@@ -43,14 +35,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun readContactList(rv: RecyclerView) {
-        val contactList : MutableList<ContactDTO> = ArrayList()
+        val contactList : MutableList<Contact> = ArrayList()
         val contacts = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.Data.DISPLAY_NAME + " ASC")
 
         if (contacts != null) {
             while (contacts.moveToNext()) {
                 val name = contacts.getString(contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
                 val number = contacts.getString(contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                val obj = ContactDTO()
+                val obj = Contact()
                 obj.name = name
                 obj.number = number
 
@@ -63,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                 contactList.add(obj)
             }
 
-            contactListAdapter = ContactAdapter(contactList as ArrayList<ContactDTO>, this)
+            contactListAdapter = ContactAdapter(contactList as ArrayList<Contact>, this)
             rv.adapter = contactListAdapter
             contacts.close()
         }
